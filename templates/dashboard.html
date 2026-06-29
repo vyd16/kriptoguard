@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>KriptoGuard - Dashboard</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&amp;family=Jetbrains+Mono:wght@400;500;700&amp;display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#8f4c45",
+                        "on-primary": "#ffffff",
+                        "primary-container": "#ffdad5",
+                        "on-primary-container": "#3b0805",
+                        secondary: "#775652",
+                        "on-secondary": "#ffffff",
+                        "secondary-container": "#ffdad5",
+                        "on-secondary-container": "#2c1512",
+                        tertiary: "#715b2e",
+                        "on-tertiary": "#ffffff",
+                        "tertiary-container": "#fcdfa6",
+                        "on-tertiary-container": "#261a00",
+                        error: "#ba1a1a",
+                        "on-error": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "on-error-container": "#410002",
+                        background: "#fff8f5",
+                        "on-background": "#231918",
+                        surface: "#fff8f5",
+                        "on-surface": "#231918",
+                        "surface-variant": "#f4ddda",
+                        "on-surface-variant": "#534341",
+                        outline: "#857370",
+                        "outline-variant": "#d8c2be",
+                        "inverse-surface": "#382e2c",
+                        "inverse-on-surface": "#ffedea",
+                        "inverse-primary": "#ffb4aa",
+                        "surface-dim": "#e1d8d4",
+                        "surface-bright": "#fff8f5",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-low": "#fbf2ed",
+                        "surface-container": "#f5ece8",
+                        "surface-container-high": "#f0e6e2",
+                        "surface-container-highest": "#eae0dd"
+                    },
+                    borderRadius: {
+                        DEFAULT: "1rem",
+                        lg: "1rem",
+                        xl: "1rem",
+                        full: "9999px"
+                    },
+                    spacing: {
+                        "container-max": "1280px",
+                        base: "8px",
+                        "margin-mobile": "16px",
+                        gutter: "24px",
+                        "margin-desktop": "40px"
+                    },
+                    fontFamily: {
+                        "label-md": ["JetBrains Mono"],
+                        "label-sm": ["JetBrains Mono"],
+                        "display-lg": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        headline: ["Inter"],
+                        display: ["Inter"],
+                        body: ["Inter"],
+                        label: ["Jetbrains Mono"]
+                    },
+                    fontSize: {
+                        "label-md": ["14px", { lineHeight: "20px", fontWeight: "500" }],
+                        "label-sm": ["12px", { lineHeight: "16px", fontWeight: "500" }],
+                        "display-lg": ["48px", { lineHeight: "56px", letterSpacing: "-0.02em", fontWeight: "700" }],
+                        "body-lg": ["18px", { lineHeight: "28px", fontWeight: "400" }],
+                        "body-md": ["16px", { lineHeight: "24px", fontWeight: "400" }],
+                        "headline-md": ["24px", { lineHeight: "32px", fontWeight: "600" }],
+                        "headline-lg-mobile": ["24px", { lineHeight: "32px", fontWeight: "600" }],
+                        "headline-lg": ["32px", { lineHeight: "40px", letterSpacing: "-0.01em", fontWeight: "600" }]
+                    }
+                }
+            }
+        };
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .grid-bg {
+            background-size: 40px 40px;
+            background-image: linear-gradient(to right, rgba(143, 76, 69, 0.03) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(143, 76, 69, 0.03) 1px, transparent 1px);
+        }
+
+        .glow-effect {
+            box-shadow: 0 0 40px -10px rgba(143, 76, 69, 0.1);
+        }
+    </style>
+</head>
+
+<body class="bg-background text-on-background flex h-screen overflow-hidden selection:bg-primary-container selection:text-on-primary-container antialiased">
+    <!-- Mobile TopNavBar -->
+    <header class="md:hidden flex justify-between items-center h-16 px-margin-mobile w-full z-50 bg-surface border-b border-outline-variant fixed top-0">
+        <a href="/" class="font-headline-md text-headline-md font-bold text-primary">KriptoGuard</a>
+        <div class="flex gap-4">
+            <span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 0;">lock</span>
+            <span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 0;">account_circle</span>
+        </div>
+    </header>
+
+    <!-- Desktop SideNavBar -->
+    <nav class="hidden md:flex flex-col p-4 gap-2 fixed left-0 top-0 h-full w-64 bg-surface-container-high border-r border-outline-variant z-40">
+        <a href="/" class="mb-8 px-4 mt-4 flex flex-col gap-1 hover:opacity-95">
+            <div>
+                <span class="font-headline-md text-headline-md text-primary font-bold">KriptoGuard</span>
+            </div>
+            <span class="font-label-sm text-label-sm text-secondary">AES-256 Secure</span>
+        </a>
+
+        <div class="flex flex-col gap-1 flex-1">
+            <!--
+            <a class="flex items-center bg-secondary-container text-on-secondary-container rounded-xl px-4 py-3 transition-all duration-200" href="/">
+                <span class="font-label-md text-label-md">Dashboard</span>
+            </a>
+            -->
+            <a class="flex items-center text-on-surface-variant hover:bg-surface-variant rounded-xl px-4 py-3 transition-all duration-200" href="/text">
+                <span class="font-label-md text-label-md">Enkripsi Teks</span>
+            </a>
+            <a class="flex items-center text-on-surface-variant hover:bg-surface-variant rounded-xl px-4 py-3 transition-all duration-200" href="/file">
+                <span class="font-label-md text-label-md">Enkripsi File</span>
+            </a>
+        </div>
+
+        <!--
+        <div class="mt-auto">
+            <a href="/file" class="w-full bg-surface-container-high hover:bg-surface-variant text-on-surface border border-outline-variant rounded-xl px-4 py-3 font-label-md text-label-md flex items-center justify-center gap-2 transition-colors">
+                <span class="material-symbols-outlined">add</span>
+                Proses Baru
+            </a>
+        </div>
+        -->
+    </nav>
+
+    <!-- Main Content Canvas -->
+    <main class="flex-1 h-full overflow-y-auto w-full md:pl-64 pt-16 md:pt-0 relative grid-bg">
+        <!-- Ambient Background Glow -->
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-primary-container/10 blur-[120px] rounded-full pointer-events-none"></div>
+        
+        <div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-8 md:py-12 flex flex-col gap-8 relative z-10 min-h-full">
+            <!-- Header Section -->
+            <header class="flex flex-col gap-2">
+                <h1 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-background">Dashboard Utama</h1>
+                <p class="font-body-md text-body-md text-on-surface-variant max-w-2xl">Pusat kendali enkripsi data lokal Anda. Operasi kriptografi dijalankan sepenuhnya menggunakan mesin Python (Flask) untuk keamanan dan kinerja maksimal.</p>
+            </header>
+
+            <!-- Security Status Bar -->
+            <div class="bg-tertiary-container/15 border border-tertiary/20 rounded-xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 glow-effect backdrop-blur-sm">
+                <div class="flex items-center gap-4">
+                    <div class="bg-tertiary/25 p-2 rounded-full flex items-center justify-center">
+                        <span class="material-symbols-outlined text-tertiary" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+                    </div>
+                    <div>
+                        <p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Status Keamanan</p>
+                        <p class="font-body-md text-body-md text-tertiary font-bold">Aktif &amp; Terlindungi (Lokal)</p>
+                    </div>
+                </div>
+                <div class="flex gap-2">
+                    <span class="inline-flex items-center gap-1.5 bg-surface-container-high px-3 py-1.5 rounded-lg border border-outline-variant font-label-sm text-label-sm text-on-surface">
+                        <span class="w-2 h-2 rounded-full bg-tertiary animate-pulse"></span>
+                        Modul AES-256-GCM
+                    </span>
+                </div>
+            </div>
+
+            <!-- Stats Bento Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="bg-surface-container-low border border-outline-variant p-6 rounded-xl flex flex-col gap-3 hover:border-secondary/50 transition-colors">
+                    <span class="material-symbols-outlined text-secondary text-3xl" style="font-variation-settings: 'FILL' 0;">memory</span>
+                    <div>
+                        <h3 class="font-headline-md text-headline-md text-on-background mb-1">100%</h3>
+                        <p class="font-body-md text-body-md text-on-surface-variant">Proses Aman Python</p>
+                    </div>
+                </div>
+                <div class="bg-surface-container-low border border-outline-variant p-6 rounded-xl flex flex-col gap-3 hover:border-secondary/50 transition-colors">
+                    <span class="material-symbols-outlined text-secondary text-3xl" style="font-variation-settings: 'FILL' 0;">cloud_off</span>
+                    <div>
+                        <h3 class="font-headline-md text-headline-md text-on-background mb-1">Enkripsi Streaming</h3>
+                        <p class="font-body-md text-body-md text-on-surface-variant">Mendukung file besar tanpa batas memori</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Cards (Main Features) -->
+            <h2 class="font-headline-md text-headline-md text-on-background mt-4 border-b border-outline-variant pb-2">Aksi Cepat</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Text Encryption Card -->
+                <a class="group relative bg-surface-container border border-outline-variant rounded-xl p-8 flex flex-col gap-6 hover:border-primary hover:bg-surface-container-high transition-all duration-300 overflow-hidden" href="/text">
+                    <div class="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity transform group-hover:scale-110 duration-500">
+                        <span class="material-symbols-outlined text-9xl">description</span>
+                    </div>
+                    <div class="bg-surface-variant w-14 h-14 rounded-xl flex items-center justify-center border border-outline-variant group-hover:bg-primary-container/20 group-hover:border-primary/30 transition-colors">
+                        <span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 0;">description</span>
+                    </div>
+                    <div class="relative z-10">
+                        <h3 class="font-headline-md text-headline-md text-on-background mb-2 group-hover:text-primary transition-colors">Enkripsi Teks</h3>
+                        <p class="font-body-md text-body-md text-on-surface-variant">Amankan pesan rahasia, kata sandi, atau catatan pribadi menggunakan algoritma standar industri. Salin hasil enkripsi secara instan.</p>
+                    </div>
+                    <div class="mt-auto pt-4 flex items-center gap-2 text-primary font-label-md text-label-md font-bold">
+                        Mulai Enkripsi <span class="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                    </div>
+                </a>
+
+                <!-- File Encryption Card -->
+                <a class="group relative bg-surface-container border border-outline-variant rounded-xl p-8 flex flex-col gap-6 hover:border-primary hover:bg-surface-container-high transition-all duration-300 overflow-hidden" href="/file">
+                    <div class="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity transform group-hover:scale-110 duration-500">
+                        <span class="material-symbols-outlined text-9xl">upload_file</span>
+                    </div>
+                    <div class="bg-surface-variant w-14 h-14 rounded-xl flex items-center justify-center border border-outline-variant group-hover:bg-primary-container/20 group-hover:border-primary/30 transition-colors">
+                        <span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 0;">upload_file</span>
+                    </div>
+                    <div class="relative z-10">
+                        <h3 class="font-headline-md text-headline-md text-on-background mb-2 group-hover:text-primary transition-colors">Enkripsi File</h3>
+                        <p class="font-body-md text-body-md text-on-surface-variant">Kunci dokumen, gambar, atau arsip sensitif secara streaming sebelum dibagikan atau disimpan di cloud. Mendukung pemrosesan batch (ZIP).</p>
+                    </div>
+                    <div class="mt-auto pt-4 flex items-center gap-2 text-primary font-label-md text-label-md font-bold">
+                        Pilih File <span class="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

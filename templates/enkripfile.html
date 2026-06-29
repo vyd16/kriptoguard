@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Enkripsi File - KriptoGuard</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&amp;family=Jetbrains+Mono:wght@400;500;700&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#8f4c45",
+                        "on-primary": "#ffffff",
+                        "primary-container": "#ffdad5",
+                        "on-primary-container": "#3b0805",
+                        secondary: "#775652",
+                        "on-secondary": "#ffffff",
+                        "secondary-container": "#ffdad5",
+                        "on-secondary-container": "#2c1512",
+                        tertiary: "#715b2e",
+                        "on-tertiary": "#ffffff",
+                        "tertiary-container": "#fcdfa6",
+                        "on-tertiary-container": "#261a00",
+                        error: "#ba1a1a",
+                        "on-error": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "on-error-container": "#410002",
+                        background: "#fff8f5",
+                        "on-background": "#231918",
+                        surface: "#fff8f5",
+                        "on-surface": "#231918",
+                        "surface-variant": "#f4ddda",
+                        "on-surface-variant": "#534341",
+                        outline: "#857370",
+                        "outline-variant": "#d8c2be",
+                        "inverse-surface": "#382e2c",
+                        "inverse-on-surface": "#ffedea",
+                        "inverse-primary": "#ffb4aa",
+                        "surface-dim": "#e1d8d4",
+                        "surface-bright": "#fff8f5",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-low": "#fbf2ed",
+                        "surface-container": "#f5ece8",
+                        "surface-container-high": "#f0e6e2",
+                        "surface-container-highest": "#eae0dd"
+                    },
+                    borderRadius: {
+                        DEFAULT: "1rem",
+                        lg: "1rem",
+                        xl: "1rem",
+                        full: "9999px"
+                    },
+                    spacing: {
+                        "container-max": "1280px",
+                        base: "8px",
+                        "margin-mobile": "16px",
+                        gutter: "24px",
+                        "margin-desktop": "40px"
+                    },
+                    fontFamily: {
+                        "label-md": ["JetBrains Mono"],
+                        "label-sm": ["JetBrains Mono"],
+                        "display-lg": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        headline: ["Inter"],
+                        display: ["Inter"],
+                        body: ["Inter"],
+                        label: ["Jetbrains Mono"]
+                    },
+                    fontSize: {
+                        "label-md": ["14px", { lineHeight: "20px", fontWeight: "500" }],
+                        "label-sm": ["12px", { lineHeight: "16px", fontWeight: "500" }],
+                        "display-lg": ["48px", { lineHeight: "56px", letterSpacing: "-0.02em", fontWeight: "700" }],
+                        "body-lg": ["18px", { lineHeight: "28px", fontWeight: "400" }],
+                        "body-md": ["16px", { lineHeight: "24px", fontWeight: "400" }],
+                        "headline-md": ["24px", { lineHeight: "32px", fontWeight: "600" }],
+                        "headline-lg-mobile": ["24px", { lineHeight: "32px", fontWeight: "600" }],
+                        "headline-lg": ["32px", { lineHeight: "40px", letterSpacing: "-0.01em", fontWeight: "600" }]
+                    }
+                }
+            }
+        };
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .drag-active {
+            border-color: theme('colors.primary');
+            background-color: theme('colors.surface-container-high');
+        }
+
+        .progress-striped {
+            background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+            background-size: 1rem 1rem;
+            animation: progress-animation 1s linear infinite;
+        }
+
+        @keyframes progress-animation {
+            from {
+                background-position: 1rem 0;
+            }
+
+            to {
+                background-position: 0 0;
+            }
+        }
+
+        .grid-bg {
+            background-size: 40px 40px;
+            background-image: linear-gradient(to right, rgba(143, 76, 69, 0.03) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(143, 76, 69, 0.03) 1px, transparent 1px);
+        }
+    </style>
+</head>
+
+<body
+    class="bg-background text-on-background min-h-screen flex font-body-md selection:bg-primary-container selection:text-on-primary-container">
+    <!-- SideNavBar -->
+    <nav
+        class="hidden md:flex bg-surface-container-lowest border-r border-outline-variant fixed left-0 top-0 h-full w-64 flex-col p-4 gap-2 z-40">
+        <a href="/" class="flex items-center px-4 py-6 mb-4 hover:opacity-95">
+            <div>
+                <h1 class="font-headline-md text-headline-md text-primary tracking-tight">KriptoGuard</h1>
+                <p class="font-label-sm text-label-sm text-on-surface-variant">AES-256 Secure</p>
+            </div>
+        </a>
+
+        <!-- Navigation Links -->
+        <!--
+        <a class="flex items-center text-on-surface-variant hover:bg-surface-variant rounded-xl px-4 py-3 transition-all duration-200"
+            href="/">
+            <span class="font-label-md text-label-md">Dashboard</span>
+        </a>
+        -->
+        <a class="flex items-center text-on-surface-variant hover:bg-surface-variant rounded-xl px-4 py-3 transition-all duration-200"
+            href="/text">
+            <span class="font-label-md text-label-md">Enkripsi Teks</span>
+        </a>
+        <a class="flex items-center bg-primary-container text-on-primary-container rounded-xl px-4 py-3 transition-all duration-200"
+            href="/file">
+            <span class="font-label-md text-label-md">Enkripsi File</span>
+        </a>
+
+        <!--
+        <div class="mt-auto">
+            <a href="/file"
+                class="w-full bg-surface-container-high hover:bg-surface-variant text-on-surface border border-outline-variant rounded-xl px-4 py-3 font-label-md text-label-md flex items-center justify-center gap-2 transition-colors">
+                <span class="material-symbols-outlined">add</span>
+                Proses Baru
+            </a>
+        </div>
+        -->
+    </nav>
+
+    <!-- Main Content Canvas -->
+    <main
+        class="flex-1 w-full md:ml-64 p-margin-mobile md:p-margin-desktop overflow-y-auto grid-bg flex flex-col min-h-screen">
+        <div class="max-w-container-max mx-auto w-full flex flex-col gap-8 flex-1">
+            <header class="mb-8 mt-4 flex items-center justify-between">
+                <div>
+                    <h2 class="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface"
+                        id="page-title">Manajemen File</h2>
+                    <p class="font-body-md text-body-md text-on-surface-variant mt-1" id="page-desc">Amankan dokumen
+                        Anda dengan enkripsi tingkat militer.</p>
+                </div>
+
+                <!-- Mode Toggle -->
+                <div class="bg-surface-container rounded-xl p-1 inline-flex border border-outline-variant">
+                    <button id="toggle-encrypt"
+                        class="px-6 py-2 rounded-lg bg-surface-variant text-on-surface font-label-md text-label-md shadow-sm transition-all">Enkripsi</button>
+                    <button id="toggle-decrypt"
+                        class="px-6 py-2 rounded-lg text-on-surface-variant hover:text-on-surface font-label-md text-label-md transition-all">Dekripsi</button>
+                </div>
+            </header>
+
+            <div class="grid grid-cols-1 xl:grid-cols-12 gap-gutter items-start">
+                <!-- Left Column: Dropzone & File List -->
+                <div class="xl:col-span-8 flex flex-col gap-6">
+                    <!-- Dropzone -->
+                    <div class="border-2 border-dashed border-outline-variant rounded-xl bg-surface-container hover:bg-surface-container-high transition-colors flex flex-col items-center justify-center py-16 px-6 text-center cursor-pointer relative overflow-hidden group"
+                        id="dropzone">
+                        <input type="file" id="file-input" class="hidden" multiple />
+                        <span
+                            class="material-symbols-outlined text-5xl text-primary mb-4 group-hover:-translate-y-2 transition-transform duration-300">cloud_upload</span>
+                        <h3 class="font-headline-md text-headline-md text-on-surface mb-2" id="dropzone-title">Tarik
+                            &amp; Lepas file di sini</h3>
+                        <p class="font-body-md text-body-md text-on-surface-variant mb-6">Atau klik untuk menelusuri
+                            dari perangkat Anda</p>
+                        <div
+                            class="flex items-center gap-2 bg-surface-container-low px-3 py-1.5 rounded-full border border-outline-variant/50">
+                            <span class="font-label-sm text-label-sm text-on-surface-variant"
+                                id="dropzone-badge">Mendukung Batch &amp; File Besar</span>
+                        </div>
+                    </div>
+
+                    <!-- File List -->
+                    <div class="flex flex-col gap-3">
+                        <div class="flex justify-between items-center px-1 mb-1">
+                            <span class="font-label-md text-label-md text-on-surface" id="queue-title">Daftar Antrean (0
+                                File)</span>
+                            <button id="btn-clear-all"
+                                class="font-label-sm text-label-sm text-error hover:opacity-85 transition-opacity hidden">Bersihkan
+                                Semua</button>
+                        </div>
+                        <div id="file-list-container" class="flex flex-col gap-3">
+                            <!-- Dynamic File Items go here -->
+                            <div id="empty-queue-msg"
+                                class="text-center py-8 text-on-surface-variant font-label-md text-label-md border border-dashed border-outline-variant/50 rounded-xl opacity-60">
+                                Antrean kosong. Silakan unggah file.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: Settings & Execution -->
+                <div class="xl:col-span-4">
+                    <div class="bg-surface-container rounded-xl border border-outline-variant">
+                        <div class="p-6 border-b border-outline-variant">
+                            <h3 class="font-headline-md text-headline-md text-on-surface flex items-center gap-2">
+                                Parameter Keamanan
+                            </h3>
+                        </div>
+
+                        <div class="p-6 flex flex-col gap-6">
+                            <!-- Password Input -->
+                            <div class="flex flex-col gap-2">
+                                <label class="font-label-md text-label-md text-on-surface" for="password-input">Kata
+                                    Sandi Enkripsi</label>
+                                <div class="relative group">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <span
+                                            class="material-symbols-outlined text-on-surface-variant group-focus-within:text-primary transition-colors">lock</span>
+                                    </div>
+                                    <input id="password-input"
+                                        class="w-full bg-surface-variant border border-outline-variant text-on-surface font-body-md rounded-lg pl-10 pr-10 py-3 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
+                                        placeholder="Masukkan kata sandi..." type="password" />
+                                    <button type="button" id="btn-toggle-password"
+                                        class="absolute inset-y-0 right-0 pr-3 flex items-center text-on-surface-variant hover:text-on-surface">
+                                        <span class="material-symbols-outlined"
+                                            id="password-visibility-icon">visibility</span>
+                                    </button>
+                                </div>
+                                <!-- Security Strength Indicator -->
+                                <div id="strength-container" class="flex items-center gap-2 mt-1">
+                                    <div class="flex-1 flex gap-1 h-1">
+                                        <div id="strength-bar-1"
+                                            class="flex-1 bg-surface-variant rounded-full transition-colors"></div>
+                                        <div id="strength-bar-2"
+                                            class="flex-1 bg-surface-variant rounded-full transition-colors"></div>
+                                        <div id="strength-bar-3"
+                                            class="flex-1 bg-surface-variant rounded-full transition-colors"></div>
+                                    </div>
+                                    <span id="strength-text"
+                                        class="font-label-sm text-label-sm text-on-surface-variant">Lemah</span>
+                                </div>
+                            </div>
+
+                            <!-- Use Key File Toggle -->
+                            <div class="flex flex-col gap-2">
+                                <label class="flex items-start gap-3 cursor-pointer group">
+                                    <div class="relative flex items-center justify-center mt-1">
+                                        <input id="keyfile-checkbox" class="sr-only peer" type="checkbox" />
+                                        <div
+                                            class="w-5 h-5 border-2 border-outline-variant rounded bg-surface peer-checked:bg-primary-container peer-checked:border-primary-container transition-colors">
+                                        </div>
+                                        <span
+                                            class="material-symbols-outlined absolute text-[16px] text-on-primary-container opacity-0 peer-checked:opacity-100 pointer-events-none transition-opacity"
+                                            style="font-variation-settings: 'FILL' 1;">check</span>
+                                    </div>
+                                    <div>
+                                        <span
+                                            class="font-label-md text-label-md text-on-surface group-hover:text-primary transition-colors">Gunakan
+                                            File Kunci (.key)</span>
+                                        <p class="font-label-sm text-label-sm text-on-surface-variant mt-0.5">Tambahkan
+                                            lapisan keamanan fisik.</p>
+                                    </div>
+                                </label>
+
+                                <!-- Keyfile Selection Box (Visible when toggle is checked) -->
+                                <div id="keyfile-selection-area" class="hidden pl-8 flex-col gap-3 mt-1">
+                                    <div class="flex flex-wrap items-center gap-2">
+                                        <input type="file" id="keyfile-input" accept=".key" class="hidden" />
+                                        <button type="button" id="btn-upload-keyfile"
+                                            class="bg-surface-variant hover:bg-surface-container-high border border-outline-variant text-on-surface font-label-sm text-label-sm py-2 px-3 rounded-lg flex items-center gap-1.5 transition-colors">
+                                            <span class="material-symbols-outlined text-[16px]">upload_file</span>
+                                            Unggah .key
+                                        </button>
+                                        <button type="button" id="btn-generate-keyfile"
+                                            class="text-primary hover:underline font-label-sm text-label-sm flex items-center gap-1">
+                                            <span class="material-symbols-outlined text-[16px]">autorenew</span>
+                                            Buat Kunci Baru
+                                        </button>
+                                    </div>
+                                    <p id="keyfile-status"
+                                        class="font-label-sm text-label-sm text-on-surface-variant italic truncate max-w-full">
+                                        Belum ada file kunci dipilih.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="h-px w-full bg-outline-variant/50"></div>
+
+                            <!-- ZIP Compression Toggle (Encrypt only) -->
+                            <div id="zip-compression-container">
+                                <label class="flex items-start gap-3 cursor-pointer group">
+                                    <div class="relative w-9 h-5 flex items-center justify-center mt-1">
+                                        <input id="zip-checkbox" class="sr-only peer" type="checkbox" />
+                                        <div
+                                            class="w-9 h-5 bg-surface-variant peer-checked:bg-primary-container rounded-full transition-colors absolute left-0 top-0">
+                                        </div>
+                                        <div
+                                            class="absolute left-0.5 top-0.5 w-4 h-4 bg-on-surface peer-checked:bg-on-primary-container rounded-full transition-transform peer-checked:translate-x-4 shadow-sm pointer-events-none flex items-center justify-center">
+                                            <span
+                                                class="material-symbols-outlined text-[10px] text-white opacity-0 peer-checked:opacity-100 transition-opacity select-none"
+                                                style="font-variation-settings: 'wght' 700;">check</span>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <span class="font-label-md text-label-md text-on-surface">Kompres ke ZIP
+                                            (Batch)</span>
+                                        <p class="font-label-sm text-label-sm text-on-surface-variant mt-0.5">Satukan
+                                            file sebelum dienkripsi untuk kemudahan transfer.</p>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Execution Area -->
+                        <div class="p-6 bg-surface-container-high rounded-b-xl border-t border-outline-variant">
+                            <!-- Overall Progress (Hidden by default) -->
+                            <div id="progress-container" class="mb-4 hidden">
+                                <div class="flex justify-between items-end mb-2">
+                                    <span
+                                        class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Progres</span>
+                                    <span id="progress-text"
+                                        class="font-label-md text-label-md text-primary font-bold">0%</span>
+                                </div>
+                                <div class="w-full h-1.5 bg-surface-variant rounded-full overflow-hidden">
+                                    <div id="progress-bar"
+                                        class="h-full bg-primary progress-striped transition-all duration-200"
+                                        style="width: 0%;"></div>
+                                </div>
+                            </div>
+
+                            <button id="btn-execute"
+                                class="w-full bg-primary hover:opacity-90 text-on-primary font-label-md text-label-md font-bold py-3.5 px-4 rounded-xl flex items-center justify-center gap-2 transition-all shadow-md">
+                                <span class="material-symbols-outlined" id="execute-icon">lock</span>
+                                <span id="execute-btn-text">Proses File</span>
+                            </button>
+
+                            <p
+                                class="font-label-sm text-label-sm text-center text-on-surface-variant mt-3 flex items-center justify-center gap-1">
+                                Diproses lokal. Data tidak disimpan permanen di server.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Success Modal -->
+    <div id="success-modal"
+        class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden items-center justify-center z-50 transition-all duration-300 opacity-0">
+        <div class="bg-surface rounded-3xl p-8 max-w-sm w-full mx-4 shadow-2xl border border-outline-variant/30 flex flex-col items-center text-center transform scale-95 transition-all duration-300"
+            id="success-modal-card">
+            <h3 class="font-headline-md text-headline-md text-on-surface mb-2 font-bold" id="success-modal-title">Proses
+                Berhasil!</h3>
+            <p class="font-body-md text-body-md text-on-surface-variant mb-6 px-2" id="success-modal-desc">
+                File/Teks Anda telah berhasil dienkripsi dengan aman menggunakan AES-256.
+            </p>
+
+            <div class="flex flex-col gap-3 w-full mb-6">
+                <!-- Unduh Hasil Button -->
+                <button id="modal-btn-download"
+                    class="w-full bg-primary hover:bg-[#773a34] active:scale-[0.98] text-white font-label-md text-label-md font-bold py-3.5 px-4 rounded-xl flex items-center justify-center gap-2 transition-all shadow-md">
+                    <span class="material-symbols-outlined text-[20px]">download</span>
+                    Unduh Hasil
+                </button>
+
+                <!-- Salin Kode Button -->
+                <button id="modal-btn-copy"
+                    class="w-full bg-surface border border-outline-variant hover:bg-surface-variant text-on-surface font-label-md text-label-md font-bold py-3.5 px-4 rounded-xl flex items-center justify-center gap-2 transition-all">
+                    <span class="material-symbols-outlined text-[20px]">content_copy</span>
+                    Salin Kode
+                </button>
+            </div>
+
+            <!-- Selesai Button -->
+            <button id="modal-btn-close"
+                class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors font-medium">
+                Selesai
+            </button>
+        </div>
+    </div>
+
+    <!-- Alert Modal -->
+    <div id="alert-modal"
+        class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden items-center justify-center z-50 transition-all duration-300 opacity-0">
+        <div class="bg-surface rounded-3xl p-8 max-w-sm w-full mx-4 shadow-2xl border border-outline-variant/30 flex flex-col items-center text-center transform scale-95 transition-all duration-300"
+            id="alert-modal-card">
+            <!-- Icon container -->
+            <div id="alert-modal-icon-container" class="w-16 h-16 rounded-full bg-primary-container/30 flex items-center justify-center mb-4">
+                <span class="material-symbols-outlined text-primary text-3xl" id="alert-modal-icon">warning</span>
+            </div>
+            
+            <h3 class="font-headline-md text-headline-md text-on-surface mb-2 font-bold" id="alert-modal-title">Peringatan</h3>
+            <p class="font-body-md text-body-md text-on-surface-variant mb-6 px-2" id="alert-modal-desc">
+                Pesan akan muncul di sini.
+            </p>
+
+            <button id="alert-modal-btn-close"
+                class="w-full bg-primary hover:opacity-90 active:scale-[0.98] text-on-primary font-label-md text-label-md font-bold py-3.5 px-4 rounded-xl flex items-center justify-center transition-all shadow-md">
+                OK
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // State variables
+        let currentMode = 'encrypt';
+        let selectedFiles = [];
+        let selectedKeyfile = null;
+
+        // Elements
+        const dropzone = document.getElementById('dropzone');
+        const fileInput = document.getElementById('file-input');
+        const fileListContainer = document.getElementById('file-list-container');
+        const emptyQueueMsg = document.getElementById('empty-queue-msg');
+        const queueTitle = document.getElementById('queue-title');
+        const btnClearAll = document.getElementById('btn-clear-all');
+        const btnExecute = document.getElementById('btn-execute');
+        const executeIcon = document.getElementById('execute-icon');
+        const executeBtnText = document.getElementById('execute-btn-text');
+
+        const toggleEncrypt = document.getElementById('toggle-encrypt');
+        const toggleDecrypt = document.getElementById('toggle-decrypt');
+        const pageTitle = document.getElementById('page-title');
+        const pageDesc = document.getElementById('page-desc');
+        const dropzoneTitle = document.getElementById('dropzone-title');
+        const dropzoneBadge = document.getElementById('dropzone-badge');
+        const zipCompressionContainer = document.getElementById('zip-compression-container');
+        const zipCheckbox = document.getElementById('zip-checkbox');
+
+        const keyfileCheckbox = document.getElementById('keyfile-checkbox');
+        const keyfileSelectionArea = document.getElementById('keyfile-selection-area');
+        const keyfileInput = document.getElementById('keyfile-input');
+        const btnUploadKeyfile = document.getElementById('btn-upload-keyfile');
+        const btnGenerateKeyfile = document.getElementById('btn-generate-keyfile');
+        const keyfileStatus = document.getElementById('keyfile-status');
+
+        const passwordInput = document.getElementById('password-input');
+        const btnTogglePassword = document.getElementById('btn-toggle-password');
+        const passwordVisibilityIcon = document.getElementById('password-visibility-icon');
+        const strengthBar1 = document.getElementById('strength-bar-1');
+        const strengthBar2 = document.getElementById('strength-bar-2');
+        const strengthBar3 = document.getElementById('strength-bar-3');
+        const strengthText = document.getElementById('strength-text');
+
+        const progressContainer = document.getElementById('progress-container');
+        const progressBar = document.getElementById('progress-bar');
+        const progressText = document.getElementById('progress-text');
+
+        // Modal Elements
+        const successModal = document.getElementById('success-modal');
+        const successModalCard = document.getElementById('success-modal-card');
+        const successModalTitle = document.getElementById('success-modal-title');
+        const successModalDesc = document.getElementById('success-modal-desc');
+        const modalBtnDownload = document.getElementById('modal-btn-download');
+        const modalBtnCopy = document.getElementById('modal-btn-copy');
+        const modalBtnClose = document.getElementById('modal-btn-close');
+
+        function showSuccessModal(title, desc, downloadUrl, copyText = null) {
+            successModalTitle.textContent = title;
+            successModalDesc.textContent = desc;
+
+            // Setup download click
+            const currentBtnDownload = document.getElementById('modal-btn-download');
+            const newBtnDownload = currentBtnDownload.cloneNode(true);
+            currentBtnDownload.parentNode.replaceChild(newBtnDownload, currentBtnDownload);
+            newBtnDownload.addEventListener('click', () => {
+                window.location.href = downloadUrl;
+            });
+
+            // Setup copy click
+            const currentBtnCopy = document.getElementById('modal-btn-copy');
+            const newBtnCopy = currentBtnCopy.cloneNode(true);
+            currentBtnCopy.parentNode.replaceChild(newBtnCopy, currentBtnCopy);
+            newBtnCopy.addEventListener('click', () => {
+                const textToCopy = copyText || (window.location.origin + downloadUrl);
+                navigator.clipboard.writeText(textToCopy);
+                showAlertModal('Berhasil', copyText ? 'Hasil disalin ke clipboard!' : 'Link unduhan disalin ke clipboard!', 'success');
+            });
+
+            successModal.classList.remove('hidden');
+            successModal.classList.add('flex');
+            setTimeout(() => {
+                successModal.classList.remove('opacity-0');
+                successModal.classList.add('opacity-100');
+                successModalCard.classList.remove('scale-95');
+                successModalCard.classList.add('scale-100');
+            }, 10);
+        }
+
+        function hideSuccessModal() {
+            successModal.classList.remove('opacity-100');
+            successModal.classList.add('opacity-0');
+            successModalCard.classList.remove('scale-100');
+            successModalCard.classList.add('scale-95');
+            setTimeout(() => {
+                successModal.classList.add('hidden');
+                successModal.classList.remove('flex');
+            }, 300);
+        }
+
+        modalBtnClose.addEventListener('click', hideSuccessModal);
+
+        // Alert Modal Elements
+        const alertModal = document.getElementById('alert-modal');
+        const alertModalCard = document.getElementById('alert-modal-card');
+        const alertModalTitle = document.getElementById('alert-modal-title');
+        const alertModalDesc = document.getElementById('alert-modal-desc');
+        const alertModalIcon = document.getElementById('alert-modal-icon');
+        const alertModalIconContainer = document.getElementById('alert-modal-icon-container');
+        const alertModalBtnClose = document.getElementById('alert-modal-btn-close');
+
+        function showAlertModal(title, desc, type = 'warning') {
+            alertModalTitle.textContent = title;
+            alertModalDesc.textContent = desc;
+
+            if (type === 'success') {
+                alertModalIcon.textContent = 'check_circle';
+                alertModalIcon.className = 'material-symbols-outlined text-primary text-3xl';
+                alertModalIconContainer.className = 'w-16 h-16 rounded-full bg-primary-container/30 flex items-center justify-center mb-4';
+            } else if (type === 'error') {
+                alertModalIcon.textContent = 'error';
+                alertModalIcon.className = 'material-symbols-outlined text-error text-3xl';
+                alertModalIconContainer.className = 'w-16 h-16 rounded-full bg-error-container/30 flex items-center justify-center mb-4';
+            } else {
+                alertModalIcon.textContent = 'warning';
+                alertModalIcon.className = 'material-symbols-outlined text-tertiary text-3xl';
+                alertModalIconContainer.className = 'w-16 h-16 rounded-full bg-tertiary-container/30 flex items-center justify-center mb-4';
+            }
+
+            alertModal.classList.remove('hidden');
+            alertModal.classList.add('flex');
+            setTimeout(() => {
+                alertModal.classList.remove('opacity-0');
+                alertModal.classList.add('opacity-100');
+                alertModalCard.classList.remove('scale-95');
+                alertModalCard.classList.add('scale-100');
+            }, 10);
+        }
+
+        function hideAlertModal() {
+            alertModal.classList.remove('opacity-100');
+            alertModal.classList.add('opacity-0');
+            alertModalCard.classList.remove('scale-100');
+            alertModalCard.classList.add('scale-95');
+            setTimeout(() => {
+                alertModal.classList.add('hidden');
+                alertModal.classList.remove('flex');
+            }, 300);
+        }
+
+        alertModalBtnClose.addEventListener('click', hideAlertModal);
+
+        // Toggle Password Visibility
+        btnTogglePassword.addEventListener('click', () => {
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                passwordVisibilityIcon.textContent = 'visibility_off';
+            } else {
+                passwordInput.type = 'password';
+                passwordVisibilityIcon.textContent = 'visibility';
+            }
+        });
+
+        // Password Strength Indicator
+        passwordInput.addEventListener('input', () => {
+            const val = passwordInput.value;
+            let strength = 0;
+            if (val.length > 0) strength += 1;
+            if (val.length >= 8) strength += 1;
+            if (/[A-Z]/.test(val) && /[0-9]/.test(val) && /[^A-Za-z0-9]/.test(val)) strength += 1;
+
+            // Reset
+            strengthBar1.className = 'flex-1 bg-surface-variant rounded-full transition-colors';
+            strengthBar2.className = 'flex-1 bg-surface-variant rounded-full transition-colors';
+            strengthBar3.className = 'flex-1 bg-surface-variant rounded-full transition-colors';
+
+            if (strength === 1) {
+                strengthBar1.classList.add('!bg-error');
+                strengthText.textContent = 'Lemah';
+                strengthText.className = 'font-label-sm text-label-sm text-error';
+            } else if (strength === 2) {
+                strengthBar1.classList.add('!bg-tertiary');
+                strengthBar2.classList.add('!bg-tertiary');
+                strengthText.textContent = 'Sedang';
+                strengthText.className = 'font-label-sm text-label-sm text-tertiary';
+            } else if (strength === 3) {
+                strengthBar1.classList.add('!bg-primary');
+                strengthBar2.classList.add('!bg-primary');
+                strengthBar3.classList.add('!bg-primary');
+                strengthText.textContent = 'Kuat';
+                strengthText.className = 'font-label-sm text-label-sm text-primary';
+            } else {
+                strengthText.textContent = 'Kosong';
+                strengthText.className = 'font-label-sm text-label-sm text-on-surface-variant';
+            }
+        });
+
+        // Keyfile Checkbox Toggle UI
+        keyfileCheckbox.addEventListener('change', () => {
+            if (keyfileCheckbox.checked) {
+                keyfileSelectionArea.classList.remove('hidden');
+            } else {
+                keyfileSelectionArea.classList.add('hidden');
+            }
+        });
+
+        // Trigger Keyfile Selection
+        btnUploadKeyfile.addEventListener('click', () => {
+            keyfileInput.click();
+        });
+
+        keyfileInput.addEventListener('change', () => {
+            if (keyfileInput.files.length > 0) {
+                selectedKeyfile = keyfileInput.files[0];
+                keyfileStatus.textContent = `File kunci: ${selectedKeyfile.name} (${formatBytes(selectedKeyfile.size)})`;
+            } else {
+                selectedKeyfile = null;
+                keyfileStatus.textContent = 'Belum ada file kunci dipilih.';
+            }
+        });
+
+        // Generate Keyfile on Backend
+        btnGenerateKeyfile.addEventListener('click', async () => {
+            try {
+                const response = await fetch('/api/generate-key', { method: 'POST' });
+                if (response.ok) {
+                    const blob = await response.blob();
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'kriptoguard.key';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    window.URL.revokeObjectURL(url);
+
+                    selectedKeyfile = new File([blob], 'kriptoguard.key', { type: 'application/octet-stream' });
+                    keyfileStatus.textContent = `File kunci terbuat & dipilih: kriptoguard.key (32 B)`;
+                    showAlertModal('Berhasil', 'File kunci baru telah dibuat dan diunduh ke komputer Anda. Simpan file ini di tempat yang aman!', 'success');
+                } else {
+                    showAlertModal('Gagal', 'Gagal menghasilkan file kunci.', 'error');
+                }
+            } catch (err) {
+                showAlertModal('Kesalahan', 'Terjadi kesalahan koneksi: ' + err.message, 'error');
+            }
+        });
+
+        // Switch to Encrypt Mode
+        toggleEncrypt.addEventListener('click', () => {
+            if (currentMode === 'encrypt') return;
+            currentMode = 'encrypt';
+
+            toggleEncrypt.className = "px-6 py-2 rounded-lg bg-surface-variant text-on-surface font-label-md text-label-md shadow-sm transition-all";
+            toggleDecrypt.className = "px-6 py-2 rounded-lg text-on-surface-variant hover:text-on-surface font-label-md text-label-md transition-all";
+
+            pageTitle.textContent = "Manajemen File";
+            pageDesc.textContent = "Amankan dokumen Anda dengan enkripsi tingkat militer.";
+            dropzoneTitle.textContent = "Tarik & Lepas file di sini";
+            dropzoneBadge.textContent = "Mendukung Batch & File Besar";
+            zipCompressionContainer.classList.remove('hidden');
+
+            executeIcon.textContent = "lock";
+            executeBtnText.textContent = "Proses Semua File";
+
+            renderFileList();
+        });
+
+        // Switch to Decrypt Mode
+        toggleDecrypt.addEventListener('click', () => {
+            if (currentMode === 'decrypt') return;
+            currentMode = 'decrypt';
+
+            toggleDecrypt.className = "px-6 py-2 rounded-lg bg-surface-variant text-on-surface font-label-md text-label-md shadow-sm transition-all";
+            toggleEncrypt.className = "px-6 py-2 rounded-lg text-on-surface-variant hover:text-on-surface font-label-md text-label-md transition-all";
+
+            pageTitle.textContent = "Dekripsi File";
+            pageDesc.textContent = "Buka kembali kunci dokumen terenkripsi Anda secara lokal.";
+            dropzoneTitle.textContent = "Tarik & Lepas file terenkripsi (.enc) di sini";
+            dropzoneBadge.textContent = "Hanya mendukung single file .enc untuk didekripsi";
+            zipCompressionContainer.classList.add('hidden');
+
+            executeIcon.textContent = "lock_open";
+            executeBtnText.textContent = "Buka Kunci File";
+
+            if (selectedFiles.length > 1) {
+                selectedFiles = [selectedFiles[0]];
+                showAlertModal('Peringatan', 'Mode Dekripsi hanya mendukung pemrosesan satu file sekaligus.', 'warning');
+            }
+            renderFileList();
+        });
+
+        // Dropzone interactions
+        dropzone.addEventListener('click', () => {
+            if (currentMode === 'encrypt') {
+                fileInput.setAttribute('multiple', 'true');
+            } else {
+                fileInput.removeAttribute('multiple');
+            }
+            fileInput.click();
+        });
+
+        fileInput.addEventListener('change', () => {
+            handleFilesSelection(fileInput.files);
+        });
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropzone.addEventListener(eventName, (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                dropzone.classList.add('drag-active');
+            }, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropzone.addEventListener(eventName, (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                dropzone.classList.remove('drag-active');
+            }, false);
+        });
+
+        dropzone.addEventListener('drop', (e) => {
+            handleFilesSelection(e.dataTransfer.files);
+        });
+
+        function handleFilesSelection(files) {
+            if (!files || files.length === 0) return;
+
+            if (currentMode === 'decrypt') {
+                const file = files[0];
+                if (!file.name.toLowerCase().endsWith('.enc')) {
+                    showAlertModal('Peringatan', 'Harap pilih file dengan ekstensi .enc untuk didekripsi.', 'warning');
+                    return;
+                }
+                selectedFiles = [file];
+            } else {
+                for (let i = 0; i < files.length; i++) {
+                    const exists = selectedFiles.some(f => f.name === files[i].name && f.size === files[i].size);
+                    if (!exists) {
+                        selectedFiles.push(files[i]);
+                    }
+                }
+            }
+            renderFileList();
+        }
+
+        function formatBytes(bytes, decimals = 2) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const dm = decimals < 0 ? 0 : decimals;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+        }
+
+        function removeFile(index) {
+            selectedFiles.splice(index, 1);
+            renderFileList();
+        }
+
+        btnClearAll.addEventListener('click', () => {
+            selectedFiles = [];
+            renderFileList();
+        });
+
+        function renderFileList() {
+            fileListContainer.innerHTML = '';
+
+            if (selectedFiles.length === 0) {
+                emptyQueueMsg.classList.remove('hidden');
+                fileListContainer.appendChild(emptyQueueMsg);
+                queueTitle.textContent = "Daftar Antrean (0 File)";
+                btnClearAll.classList.add('hidden');
+                return;
+            }
+
+            emptyQueueMsg.classList.add('hidden');
+            queueTitle.textContent = `Daftar Antrean (${selectedFiles.length} File)`;
+            btnClearAll.classList.remove('hidden');
+
+            selectedFiles.forEach((file, index) => {
+                const item = document.createElement('div');
+                item.className = "bg-surface-container rounded-xl border border-outline-variant p-4 flex items-center gap-4 relative overflow-hidden group";
+
+                let icon = 'draft';
+                if (file.type.includes('pdf')) icon = 'picture_as_pdf';
+                else if (file.type.includes('image')) icon = 'image';
+                else if (file.type.includes('video') || file.type.includes('movie')) icon = 'movie';
+                else if (file.type.includes('zip') || file.type.includes('tar') || file.name.endsWith('.zip') || file.name.endsWith('.rar')) icon = 'folder_zip';
+                else if (file.name.endsWith('.enc')) icon = 'encrypted';
+
+                item.innerHTML = `
+                    <div class="p-2 bg-surface-variant rounded-lg shrink-0">
+                        <span class="material-symbols-outlined text-on-surface">${icon}</span>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex justify-between items-baseline mb-1">
+                            <p class="font-label-md text-label-md text-on-surface truncate pr-4">${file.name}</p>
+                            <span class="font-label-sm text-label-sm text-on-surface-variant shrink-0">${formatBytes(file.size)}</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="w-2 h-2 rounded-full bg-outline"></div>
+                            <span class="font-label-sm text-label-sm text-on-surface-variant">Siap diproses</span>
+                        </div>
+                    </div>
+                    <button type="button" class="text-on-surface-variant hover:text-error transition-colors shrink-0 p-1 opacity-0 group-hover:opacity-100" onclick="removeFile(${index})">
+                        <span class="material-symbols-outlined">close</span>
+                    </button>
+                `;
+                fileListContainer.appendChild(item);
+            });
+        }
+
+        btnExecute.addEventListener('click', async () => {
+            if (selectedFiles.length === 0) {
+                showAlertModal('Peringatan', 'Pilih setidaknya satu file untuk diproses.', 'warning');
+                return;
+            }
+
+            const password = passwordInput.value;
+            const useKeyfile = keyfileCheckbox.checked;
+
+            if (!password && (!useKeyfile || !selectedKeyfile)) {
+                showAlertModal('Peringatan', 'Harap masukkan kata sandi atau berikan file kunci (.key).', 'warning');
+                return;
+            }
+
+            const formData = new FormData();
+            if (password) {
+                formData.append('password', password);
+            }
+            if (useKeyfile && selectedKeyfile) {
+                formData.append('keyfile', selectedKeyfile);
+            }
+
+            let endpoint = '';
+
+            if (currentMode === 'encrypt') {
+                endpoint = '/api/encrypt-file';
+                const compressZip = zipCheckbox.checked;
+                formData.append('zip_compression', compressZip ? 'true' : 'false');
+
+                for (let i = 0; i < selectedFiles.length; i++) {
+                    formData.append('files[]', selectedFiles[i]);
+                }
+            } else {
+                endpoint = '/api/decrypt-file';
+                formData.append('file', selectedFiles[0]);
+            }
+
+            progressContainer.classList.remove('hidden');
+            progressBar.style.width = '0%';
+            progressText.textContent = '0%';
+            btnExecute.disabled = true;
+            btnExecute.classList.add('opacity-50', 'cursor-not-allowed');
+
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', endpoint, true);
+            xhr.responseType = 'json';
+
+            xhr.upload.addEventListener('progress', (e) => {
+                if (e.lengthComputable) {
+                    const percent = Math.round((e.loaded / e.total) * 100);
+                    const overallPercent = Math.round(percent * 0.9);
+                    progressBar.style.width = `${overallPercent}%`;
+                    progressText.textContent = `${overallPercent}%`;
+                }
+            });
+
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    progressBar.style.width = '100%';
+                    progressText.textContent = '100%';
+
+                    const downloadUrl = xhr.response.download_url;
+                    const modeTitle = "Proses Berhasil!";
+                    const modeDesc = currentMode === 'encrypt'
+                        ? 'File Anda telah berhasil dienkripsi dengan aman menggunakan AES-256.'
+                        : 'File Anda telah berhasil didekripsi dengan aman menggunakan AES-256.';
+
+                    showSuccessModal(modeTitle, modeDesc, downloadUrl);
+
+                    // Reset password field
+                    passwordInput.value = '';
+                    passwordInput.dispatchEvent(new Event('input'));
+
+                    selectedFiles = [];
+                    renderFileList();
+                    progressContainer.classList.add('hidden');
+                } else {
+                    const errObj = xhr.response || {};
+                    showAlertModal('Gagal', errObj.message || 'Terjadi kesalahan pemrosesan pada server.', 'error');
+                    progressContainer.classList.add('hidden');
+                }
+
+                btnExecute.disabled = false;
+                btnExecute.classList.remove('opacity-50', 'cursor-not-allowed');
+            };
+
+            xhr.onerror = function () {
+                showAlertModal('Kesalahan', 'Kesalahan koneksi ke server.', 'error');
+                progressContainer.classList.add('hidden');
+                btnExecute.disabled = false;
+                btnExecute.classList.remove('opacity-50', 'cursor-not-allowed');
+            };
+
+            xhr.send(formData);
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Enkripsi &amp; Dekripsi Teks - KriptoGuard</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&amp;family=Jetbrains+Mono:wght@400;500;700&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#8f4c45",
+                        "on-primary": "#ffffff",
+                        "primary-container": "#ffdad5",
+                        "on-primary-container": "#3b0805",
+                        secondary: "#775652",
+                        "on-secondary": "#ffffff",
+                        "secondary-container": "#ffdad5",
+                        "on-secondary-container": "#2c1512",
+                        tertiary: "#715b2e",
+                        "on-tertiary": "#ffffff",
+                        "tertiary-container": "#fcdfa6",
+                        "on-tertiary-container": "#261a00",
+                        error: "#ba1a1a",
+                        "on-error": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "on-error-container": "#410002",
+                        background: "#fff8f5",
+                        "on-background": "#231918",
+                        surface: "#fff8f5",
+                        "on-surface": "#231918",
+                        "surface-variant": "#f4ddda",
+                        "on-surface-variant": "#534341",
+                        outline: "#857370",
+                        "outline-variant": "#d8c2be",
+                        "inverse-surface": "#382e2c",
+                        "inverse-on-surface": "#ffedea",
+                        "inverse-primary": "#ffb4aa",
+                        "surface-dim": "#e1d8d4",
+                        "surface-bright": "#fff8f5",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-low": "#fbf2ed",
+                        "surface-container": "#f5ece8",
+                        "surface-container-high": "#f0e6e2",
+                        "surface-container-highest": "#eae0dd"
+                    },
+                    borderRadius: {
+                        DEFAULT: "1rem",
+                        lg: "1rem",
+                        xl: "1rem",
+                        full: "9999px"
+                    },
+                    spacing: {
+                        "container-max": "1280px",
+                        base: "8px",
+                        "margin-mobile": "16px",
+                        gutter: "24px",
+                        "margin-desktop": "40px"
+                    },
+                    fontFamily: {
+                        "label-md": ["JetBrains Mono"],
+                        "label-sm": ["JetBrains Mono"],
+                        "display-lg": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        headline: ["Inter"],
+                        display: ["Inter"],
+                        body: ["Inter"],
+                        label: ["Jetbrains Mono"]
+                    },
+                    fontSize: {
+                        "label-md": ["14px", { lineHeight: "20px", fontWeight: "500" }],
+                        "label-sm": ["12px", { lineHeight: "16px", fontWeight: "500" }],
+                        "display-lg": ["48px", { lineHeight: "56px", letterSpacing: "-0.02em", fontWeight: "700" }],
+                        "body-lg": ["18px", { lineHeight: "28px", fontWeight: "400" }],
+                        "body-md": ["16px", { lineHeight: "24px", fontWeight: "400" }],
+                        "headline-md": ["24px", { lineHeight: "32px", fontWeight: "600" }],
+                        "headline-lg-mobile": ["24px", { lineHeight: "32px", fontWeight: "600" }],
+                        "headline-lg": ["32px", { lineHeight: "40px", letterSpacing: "-0.01em", fontWeight: "600" }]
+                    }
+                }
+            }
+        };
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .glass-panel {
+            background-color: rgba(240, 230, 226, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid #d8c2be;
+            border-radius: 1rem;
+        }
+
+        .text-glow {
+            text-shadow: 0 0 10px rgba(143, 76, 69, 0.15);
+        }
+
+        .grid-bg {
+            background-size: 40px 40px;
+            background-image: linear-gradient(to right, rgba(143, 76, 69, 0.03) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(143, 76, 69, 0.03) 1px, transparent 1px);
+        }
+    </style>
+</head>
+
+<body
+    class="bg-background text-on-surface min-h-screen flex font-body-md selection:bg-primary-container selection:text-on-primary-container antialiased">
+    <!-- SideNavBar -->
+    <nav
+        class="hidden md:flex bg-surface-container-lowest border-r border-outline-variant fixed left-0 top-0 h-full w-64 flex-col p-4 gap-2 z-40">
+        <a href="/" class="flex items-center px-4 py-6 mb-4 hover:opacity-95">
+            <div>
+                <h1 class="font-headline-md text-headline-md text-primary tracking-tight">KriptoGuard</h1>
+                <p class="font-label-sm text-label-sm text-on-surface-variant">AES-256 Secure</p>
+            </div>
+        </a>
+
+        <!-- Navigation Links -->
+        <!--
+        <a class="flex items-center text-on-surface-variant hover:bg-surface-variant rounded-xl px-4 py-3 transition-all duration-200"
+            href="/">
+            <span class="font-label-md text-label-md">Dashboard</span>
+        </a>
+        -->
+        <a class="flex items-center bg-primary-container text-on-primary-container rounded-xl px-4 py-3 transition-all duration-200"
+            href="/text">
+            <span class="font-label-md text-label-md">Enkripsi Teks</span>
+        </a>
+        <a class="flex items-center text-on-surface-variant hover:bg-surface-variant rounded-xl px-4 py-3 transition-all duration-200"
+            href="/file">
+            <span class="font-label-md text-label-md">Enkripsi File</span>
+        </a>
+
+        <!--
+        <div class="mt-auto">
+            <a href="/file"
+                class="w-full bg-surface-container-high hover:bg-surface-variant text-on-surface border border-outline-variant rounded-xl px-4 py-3 font-label-md text-label-md flex items-center justify-center gap-2 transition-colors">
+                <span class="material-symbols-outlined">add</span>
+                Proses Baru
+            </a>
+        </div>
+        -->
+    </nav>
+
+    <!-- Main Content Canvas -->
+    <main
+        class="flex-1 w-full md:ml-64 p-margin-mobile md:p-margin-desktop overflow-y-auto flex flex-col min-h-screen grid-bg">
+        <div class="max-w-container-max mx-auto w-full flex flex-col gap-8 flex-1">
+            <!-- Header Section -->
+            <header class="text-center md:text-left mb-4 mt-4">
+                <h1 class="font-headline-lg text-headline-lg md:text-[40px] text-primary mb-2 text-glow">Enkripsi &amp;
+                    Dekripsi Teks</h1>
+                <p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl">Amankan pesan teks Anda
+                    menggunakan standar enkripsi AES-256. Masukkan teks, atur kunci keamanan, dan proses secara lokal.
+                </p>
+            </header>
+
+            <!-- Two Column Layout -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-start">
+                <!-- Left Column: Input -->
+                <div class="lg:col-span-5 flex flex-col gap-6">
+                    <div class="glass-panel p-6 flex flex-col h-full min-h-[400px]">
+                        <div class="flex justify-between items-center mb-4">
+                            <label class="font-label-md text-label-md text-secondary" for="source-text">Teks
+                                Sumber</label>
+                            <span class="material-symbols-outlined text-outline">description</span>
+                        </div>
+                        <textarea
+                            class="flex-grow w-full bg-surface border border-outline-variant rounded-lg p-4 font-body-md text-body-md text-on-surface focus:border-secondary focus:ring-1 focus:ring-secondary transition-all resize-none min-h-[250px]"
+                            id="source-text"
+                            placeholder="Masukkan teks mentah atau teks terenkripsi di sini..."></textarea>
+                        <div class="mt-4 flex justify-between items-center text-on-surface-variant opacity-70">
+                            <span id="char-counter" class="font-label-sm text-label-sm">Karakter: 0</span>
+                            <button id="btn-paste"
+                                class="hover:text-primary transition-colors flex items-center gap-1 font-label-sm text-label-sm">
+                                <span class="material-symbols-outlined text-[16px]">content_paste</span> Tempel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Middle Column: Controls -->
+                <div class="lg:col-span-3 flex flex-col justify-center gap-6 py-4 lg:py-0">
+                    <div
+                        class="bg-surface-container-low border border-outline-variant rounded-xl p-4 flex flex-col gap-4 shadow-sm relative">
+                        <div
+                            class="text-center font-label-md text-label-md text-primary border-b border-outline-variant pb-2 mb-2 font-bold">
+                            Kontrol Keamanan</div>
+
+                        <!-- Password Field -->
+                        <div class="flex flex-col gap-2">
+                            <label class="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-2"
+                                for="secret-key">
+                                <span class="material-symbols-outlined text-[16px]">vpn_key</span> Kata Sandi (Kunci)
+                            </label>
+                            <div class="relative">
+                                <input
+                                    class="w-full bg-surface border border-outline-variant rounded-lg px-3 py-2 pr-10 font-label-md text-label-md text-on-surface focus:border-secondary focus:ring-1 focus:ring-secondary transition-all"
+                                    id="secret-key" placeholder="********" type="password" />
+                                <button id="btn-toggle-password" type="button"
+                                    class="absolute right-2 top-1/2 -translate-y-1/2 text-outline hover:text-on-surface transition-colors">
+                                    <span class="material-symbols-outlined text-[18px]"
+                                        id="password-visibility-icon">visibility</span>
+                                </button>
+                            </div>
+                            <div class="w-full h-1 bg-surface-variant rounded-full overflow-hidden mt-1">
+                                <div class="w-0 h-full bg-error transition-all" id="strength-bar"></div>
+                            </div>
+                        </div>
+
+                        <div
+                            class="text-center text-on-surface-variant font-label-sm text-label-sm opacity-50 font-bold">
+                            ATAU</div>
+
+                        <!-- Key File Buttons -->
+                        <div class="flex flex-col gap-2">
+                            <input type="file" id="keyfile-input" accept=".key" class="hidden" />
+                            <button id="btn-upload-key"
+                                class="w-full bg-surface-container hover:bg-surface-variant border border-outline-variant rounded-lg py-2 flex items-center justify-center gap-2 font-label-md text-label-md transition-colors text-on-surface">
+                                <span class="material-symbols-outlined text-[18px]">upload_file</span> Unggah .key
+                            </button>
+                            <button id="btn-generate-key"
+                                class="w-full text-secondary hover:text-primary transition-colors font-label-sm text-label-sm flex items-center justify-center gap-1 mt-1">
+                                <span class="material-symbols-outlined text-[16px]">autorenew</span> Generate Kunci Baru
+                            </button>
+                            <p id="key-status"
+                                class="text-center font-label-sm text-label-sm text-on-surface-variant italic truncate max-w-full hidden">
+                                Key loaded.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="flex flex-col gap-3 mt-4">
+                        <button id="btn-encrypt"
+                            class="w-full bg-primary hover:opacity-95 text-on-primary font-label-md text-label-md py-4 rounded-xl transition-all shadow-md flex items-center justify-center gap-2 group font-bold">
+                            <span
+                                class="material-symbols-outlined group-hover:rotate-12 transition-transform">lock</span>
+                            Enkrip Sekarang
+                        </button>
+                        <button id="btn-decrypt"
+                            class="w-full bg-secondary-container hover:opacity-95 text-on-secondary-container border border-secondary/20 font-label-md text-label-md py-4 rounded-xl transition-all flex items-center justify-center gap-2 group font-bold">
+                            <span
+                                class="material-symbols-outlined group-hover:-rotate-12 transition-transform">lock_open</span>
+                            Dekrip Sekarang
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Right Column: Output -->
+                <div class="lg:col-span-4 flex flex-col gap-6">
+                    <div class="glass-panel p-6 flex flex-col h-full min-h-[400px]">
+                        <div class="flex justify-between items-center mb-4">
+                            <label class="font-label-md text-label-md text-tertiary" for="result-text">Hasil
+                                Proses</label>
+                            <div id="process-badge"
+                                class="px-2 py-1 bg-surface-variant text-on-surface-variant rounded-md font-label-sm text-label-sm flex items-center gap-1 border border-outline-variant/50">
+                                <span class="w-2 h-2 rounded-full bg-outline"></span> Menunggu
+                            </div>
+                        </div>
+                        <div class="relative flex-grow min-h-[250px] flex flex-col">
+                            <textarea
+                                class="flex-grow w-full bg-surface border border-outline-variant rounded-lg p-4 font-body-md text-body-md text-on-surface focus:outline-none resize-none"
+                                id="result-text" placeholder="Hasil enkripsi atau dekripsi akan muncul di sini..."
+                                readonly></textarea>
+                        </div>
+
+                        <!-- Copy & Save Buttons -->
+                        <div class="mt-4 flex justify-between items-center">
+                            <button id="btn-save-txt"
+                                class="bg-surface-container-highest hover:bg-surface-variant border border-outline-variant text-on-surface font-label-md text-label-md py-2 px-4 rounded-lg flex items-center gap-2 transition-colors opacity-50 cursor-not-allowed"
+                                disabled>
+                                <span class="material-symbols-outlined text-[18px]">download</span> Simpan sbg .txt
+                            </button>
+                            <button id="btn-copy"
+                                class="text-secondary hover:text-primary transition-colors flex items-center gap-1 font-label-md text-label-md opacity-50 cursor-not-allowed"
+                                disabled>
+                                <span class="material-symbols-outlined text-[18px]">content_copy</span> Salin
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Success Modal -->
+    <div id="success-modal"
+        class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden items-center justify-center z-50 transition-all duration-300 opacity-0">
+        <div class="bg-surface rounded-3xl p-8 max-w-sm w-full mx-4 shadow-2xl border border-outline-variant/30 flex flex-col items-center text-center transform scale-95 transition-all duration-300"
+            id="success-modal-card">
+            <h3 class="font-headline-md text-headline-md text-on-surface mb-2 font-bold" id="success-modal-title">Proses
+                Berhasil!</h3>
+            <p class="font-body-md text-body-md text-on-surface-variant mb-6 px-2" id="success-modal-desc">
+                File/Teks Anda telah berhasil dienkripsi dengan aman menggunakan AES-256.
+            </p>
+
+            <div class="flex flex-col gap-3 w-full mb-6">
+                <!-- Unduh Hasil Button -->
+                <button id="modal-btn-download"
+                    class="w-full bg-[#D39E93] hover:opacity-90 text-white font-label-md text-label-md font-bold py-3.5 px-4 rounded-xl flex items-center justify-center gap-2 transition-all shadow-md">
+                    <span class="material-symbols-outlined text-[20px]">download</span>
+                    Unduh Hasil
+                </button>
+
+                <!-- Salin Kode Button -->
+                <button id="modal-btn-copy"
+                    class="w-full bg-surface border border-outline-variant hover:bg-surface-variant text-on-surface font-label-md text-label-md font-bold py-3.5 px-4 rounded-xl flex items-center justify-center gap-2 transition-all">
+                    <span class="material-symbols-outlined text-[20px]">content_copy</span>
+                    Salin Kode
+                </button>
+            </div>
+
+            <!-- Selesai Button -->
+            <button id="modal-btn-close"
+                class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors font-medium">
+                Selesai
+            </button>
+        </div>
+    </div>
+
+    <!-- Alert Modal -->
+    <div id="alert-modal"
+        class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden items-center justify-center z-50 transition-all duration-300 opacity-0">
+        <div class="bg-surface rounded-3xl p-8 max-w-sm w-full mx-4 shadow-2xl border border-outline-variant/30 flex flex-col items-center text-center transform scale-95 transition-all duration-300"
+            id="alert-modal-card">
+            <!-- Icon container -->
+            <div id="alert-modal-icon-container" class="w-16 h-16 rounded-full bg-primary-container/30 flex items-center justify-center mb-4">
+                <span class="material-symbols-outlined text-primary text-3xl" id="alert-modal-icon">warning</span>
+            </div>
+            
+            <h3 class="font-headline-md text-headline-md text-on-surface mb-2 font-bold" id="alert-modal-title">Peringatan</h3>
+            <p class="font-body-md text-body-md text-on-surface-variant mb-6 px-2" id="alert-modal-desc">
+                Pesan akan muncul di sini.
+            </p>
+
+            <button id="alert-modal-btn-close"
+                class="w-full bg-[#D39E93] hover:opacity-90 active:scale-[0.98] text-white font-label-md text-label-md font-bold py-3.5 px-4 rounded-xl flex items-center justify-center transition-all shadow-md">
+                OK
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // State variables
+        let loadedKeyfileB64 = '';
+        let loadedKeyfileName = '';
+
+        // Elements
+        const sourceText = document.getElementById('source-text');
+        const charCounter = document.getElementById('char-counter');
+        const btnPaste = document.getElementById('btn-paste');
+
+        const secretKey = document.getElementById('secret-key');
+        const btnTogglePassword = document.getElementById('btn-toggle-password');
+        const passwordVisibilityIcon = document.getElementById('password-visibility-icon');
+        const strengthBar = document.getElementById('strength-bar');
+
+        const keyfileInput = document.getElementById('keyfile-input');
+        const btnUploadKey = document.getElementById('btn-upload-key');
+        const btnGenerateKey = document.getElementById('btn-generate-key');
+        const keyStatus = document.getElementById('key-status');
+
+        const btnEncrypt = document.getElementById('btn-encrypt');
+        const btnDecrypt = document.getElementById('btn-decrypt');
+
+        const resultText = document.getElementById('result-text');
+        const processBadge = document.getElementById('process-badge');
+
+        const btnSaveTxt = document.getElementById('btn-save-txt');
+        const btnCopy = document.getElementById('btn-copy');
+
+        // Modal Elements
+        const successModal = document.getElementById('success-modal');
+        const successModalCard = document.getElementById('success-modal-card');
+        const successModalTitle = document.getElementById('success-modal-title');
+        const successModalDesc = document.getElementById('success-modal-desc');
+        const modalBtnDownload = document.getElementById('modal-btn-download');
+        const modalBtnCopy = document.getElementById('modal-btn-copy');
+        const modalBtnClose = document.getElementById('modal-btn-close');
+
+        function showSuccessModal(title, desc, downloadCallback, copyCallback) {
+            successModalTitle.textContent = title;
+            successModalDesc.textContent = desc;
+
+            // Setup download click
+            const currentBtnDownload = document.getElementById('modal-btn-download');
+            const newBtnDownload = currentBtnDownload.cloneNode(true);
+            currentBtnDownload.parentNode.replaceChild(newBtnDownload, currentBtnDownload);
+            newBtnDownload.addEventListener('click', downloadCallback);
+
+            // Setup copy click
+            const currentBtnCopy = document.getElementById('modal-btn-copy');
+            const newBtnCopy = currentBtnCopy.cloneNode(true);
+            currentBtnCopy.parentNode.replaceChild(newBtnCopy, currentBtnCopy);
+            newBtnCopy.addEventListener('click', copyCallback);
+
+            successModal.classList.remove('hidden');
+            successModal.classList.add('flex');
+            setTimeout(() => {
+                successModal.classList.remove('opacity-0');
+                successModal.classList.add('opacity-100');
+                successModalCard.classList.remove('scale-95');
+                successModalCard.classList.add('scale-100');
+            }, 10);
+        }
+
+        function hideSuccessModal() {
+            successModal.classList.remove('opacity-100');
+            successModal.classList.add('opacity-0');
+            successModalCard.classList.remove('scale-100');
+            successModalCard.classList.add('scale-95');
+            setTimeout(() => {
+                successModal.classList.add('hidden');
+                successModal.classList.remove('flex');
+            }, 300);
+        }
+
+        modalBtnClose.addEventListener('click', hideSuccessModal);
+
+        // Alert Modal Elements
+        const alertModal = document.getElementById('alert-modal');
+        const alertModalCard = document.getElementById('alert-modal-card');
+        const alertModalTitle = document.getElementById('alert-modal-title');
+        const alertModalDesc = document.getElementById('alert-modal-desc');
+        const alertModalIcon = document.getElementById('alert-modal-icon');
+        const alertModalIconContainer = document.getElementById('alert-modal-icon-container');
+        const alertModalBtnClose = document.getElementById('alert-modal-btn-close');
+
+        function showAlertModal(title, desc, type = 'warning') {
+            alertModalTitle.textContent = title;
+            alertModalDesc.textContent = desc;
+
+            if (type === 'success') {
+                alertModalIcon.textContent = 'check_circle';
+                alertModalIcon.className = 'material-symbols-outlined text-primary text-3xl';
+                alertModalIconContainer.className = 'w-16 h-16 rounded-full bg-primary-container/30 flex items-center justify-center mb-4';
+            } else if (type === 'error') {
+                alertModalIcon.textContent = 'error';
+                alertModalIcon.className = 'material-symbols-outlined text-error text-3xl';
+                alertModalIconContainer.className = 'w-16 h-16 rounded-full bg-error-container/30 flex items-center justify-center mb-4';
+            } else {
+                alertModalIcon.textContent = 'warning';
+                alertModalIcon.className = 'material-symbols-outlined text-tertiary text-3xl';
+                alertModalIconContainer.className = 'w-16 h-16 rounded-full bg-tertiary-container/30 flex items-center justify-center mb-4';
+            }
+
+            alertModal.classList.remove('hidden');
+            alertModal.classList.add('flex');
+            setTimeout(() => {
+                alertModal.classList.remove('opacity-0');
+                alertModal.classList.add('opacity-100');
+                alertModalCard.classList.remove('scale-95');
+                alertModalCard.classList.add('scale-100');
+            }, 10);
+        }
+
+        function hideAlertModal() {
+            alertModal.classList.remove('opacity-100');
+            alertModal.classList.add('opacity-0');
+            alertModalCard.classList.remove('scale-100');
+            alertModalCard.classList.add('scale-95');
+            setTimeout(() => {
+                alertModal.classList.add('hidden');
+                alertModal.classList.remove('flex');
+            }, 300);
+        }
+
+        alertModalBtnClose.addEventListener('click', hideAlertModal);
+
+        // Character count update
+        sourceText.addEventListener('input', () => {
+            charCounter.textContent = `Karakter: ${sourceText.value.length}`;
+        });
+
+        // Paste action
+        btnPaste.addEventListener('click', async () => {
+            try {
+                const text = await navigator.clipboard.readText();
+                sourceText.value = text;
+                charCounter.textContent = `Karakter: ${text.length}`;
+            } catch (err) {
+                showAlertModal('Gagal', 'Gagal membaca clipboard. Silakan tempel secara manual.', 'error');
+            }
+        });
+
+        // Toggle password visibility
+        btnTogglePassword.addEventListener('click', () => {
+            if (secretKey.type === 'password') {
+                secretKey.type = 'text';
+                passwordVisibilityIcon.textContent = 'visibility_off';
+            } else {
+                secretKey.type = 'password';
+                passwordVisibilityIcon.textContent = 'visibility';
+            }
+        });
+
+        // Password strength meter
+        secretKey.addEventListener('input', () => {
+            const val = secretKey.value;
+            let strengthPercent = 0;
+            let barColor = 'bg-error';
+
+            if (val.length > 0) {
+                strengthPercent = 33;
+                if (val.length >= 8) {
+                    strengthPercent = 66;
+                    barColor = 'bg-tertiary';
+                }
+                if (/[A-Z]/.test(val) && /[0-9]/.test(val) && /[^A-Za-z0-9]/.test(val)) {
+                    strengthPercent = 100;
+                    barColor = 'bg-primary';
+                }
+            }
+
+            strengthBar.className = `h-full ${barColor} transition-all`;
+            strengthBar.style.width = `${strengthPercent}%`;
+        });
+
+        // Upload key file click triggers file input
+        btnUploadKey.addEventListener('click', () => {
+            keyfileInput.click();
+        });
+
+        keyfileInput.addEventListener('change', () => {
+            const file = keyfileInput.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                loadedKeyfileB64 = e.target.result;
+                loadedKeyfileName = file.name;
+                keyStatus.textContent = `Key loaded: ${file.name}`;
+                keyStatus.classList.remove('hidden');
+            };
+            reader.readAsDataURL(file);
+        });
+
+        // Generate keyfile
+        btnGenerateKey.addEventListener('click', async () => {
+            try {
+                const response = await fetch('/api/generate-key', { method: 'POST' });
+                if (response.ok) {
+                    const blob = await response.blob();
+
+                    // Read file as DataURL for internal base64 state
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        loadedKeyfileB64 = e.target.result;
+                        loadedKeyfileName = 'kriptoguard.key';
+                        keyStatus.textContent = 'Key loaded: kriptoguard.key';
+                        keyStatus.classList.remove('hidden');
+                    };
+                    reader.readAsDataURL(blob);
+
+                    // Trigger browser download
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'kriptoguard.key';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    window.URL.revokeObjectURL(url);
+
+                    showAlertModal('Berhasil', 'File kunci baru (.key) berhasil dibuat dan diunduh. File kunci ini otomatis dimuat ke dalam sesi saat ini.', 'success');
+                } else {
+                    showAlertModal('Gagal', 'Gagal menghasilkan file kunci.', 'error');
+                }
+            } catch (err) {
+                showAlertModal('Kesalahan', 'Kesalahan koneksi: ' + err.message, 'error');
+            }
+        });
+
+        // Process output UI enablement
+        function updateOutputState(textVal) {
+            if (textVal) {
+                resultText.value = textVal;
+
+                // Enable buttons
+                btnSaveTxt.disabled = false;
+                btnSaveTxt.classList.remove('opacity-50', 'cursor-not-allowed');
+                btnSaveTxt.classList.add('hover:bg-surface-variant');
+
+                btnCopy.disabled = false;
+                btnCopy.classList.remove('opacity-50', 'cursor-not-allowed');
+                btnCopy.classList.add('hover:text-primary');
+            } else {
+                resultText.value = '';
+
+                // Disable buttons
+                btnSaveTxt.disabled = true;
+                btnSaveTxt.classList.add('opacity-50', 'cursor-not-allowed');
+                btnSaveTxt.classList.remove('hover:bg-surface-variant');
+
+                btnCopy.disabled = true;
+                btnCopy.classList.add('opacity-50', 'cursor-not-allowed');
+                btnCopy.classList.remove('hover:text-primary');
+            }
+        }
+
+        // Encrypt Text Action
+        btnEncrypt.addEventListener('click', async () => {
+            const text = sourceText.value.trim();
+            const password = secretKey.value;
+            const keyfile = loadedKeyfileB64;
+
+            if (!text) {
+                showAlertModal('Peringatan', 'Teks sumber tidak boleh kosong.', 'warning');
+                return;
+            }
+
+            if (!password && !keyfile) {
+                showAlertModal('Peringatan', 'Masukkan kata sandi atau unggah file kunci (.key).', 'warning');
+                return;
+            }
+
+            processBadge.innerHTML = `<span class="material-symbols-outlined text-[16px] animate-spin">sync</span> Memproses...`;
+
+            try {
+                const response = await fetch('/api/encrypt-text', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text, password, keyfile })
+                });
+
+                const data = await response.json();
+                if (data.status === 'success') {
+                    updateOutputState(data.result);
+                    processBadge.innerHTML = `<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span> Selesai (Enkripsi)`;
+
+                    // Reset secretKey/password field
+                    secretKey.value = '';
+                    secretKey.dispatchEvent(new Event('input'));
+
+                    showSuccessModal(
+                        "Proses Berhasil!",
+                        "Teks Anda telah berhasil dienkripsi dengan aman menggunakan AES-256.",
+                        () => {
+                            const blob = new Blob([data.result], { type: "text/plain;charset=utf-8" });
+                            const url = URL.createObjectURL(blob);
+                            const a = document.createElement('a');
+                            a.href = url;
+                            a.download = 'kriptoguard_encrypted_text.txt';
+                            document.body.appendChild(a);
+                            a.click();
+                            document.body.removeChild(a);
+                            URL.revokeObjectURL(url);
+                        },
+                        () => {
+                            navigator.clipboard.writeText(data.result);
+                            showAlertModal('Berhasil', 'Hasil enkripsi disalin ke clipboard!', 'success');
+                        }
+                    );
+                } else {
+                    showAlertModal('Gagal', data.message || 'Gagal mengenkripsi teks.', 'error');
+                    processBadge.innerHTML = `<span class="w-2 h-2 rounded-full bg-error"></span> Gagal`;
+                }
+            } catch (err) {
+                showAlertModal('Kesalahan', 'Kesalahan koneksi ke server.', 'error');
+                processBadge.innerHTML = `<span class="w-2 h-2 rounded-full bg-error"></span> Gagal`;
+            }
+        });
+
+        // Decrypt Text Action
+        btnDecrypt.addEventListener('click', async () => {
+            const ciphertext = sourceText.value.trim();
+            const password = secretKey.value;
+            const keyfile = loadedKeyfileB64;
+
+            if (!ciphertext) {
+                showAlertModal('Peringatan', 'Teks sumber (terenkripsi) tidak boleh kosong.', 'warning');
+                return;
+            }
+
+            if (!password && !keyfile) {
+                showAlertModal('Peringatan', 'Masukkan kata sandi atau unggah file kunci (.key).', 'warning');
+                return;
+            }
+
+            processBadge.innerHTML = `<span class="material-symbols-outlined text-[16px] animate-spin">sync</span> Memproses...`;
+
+            try {
+                const response = await fetch('/api/decrypt-text', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ ciphertext, password, keyfile })
+                });
+
+                const data = await response.json();
+                if (data.status === 'success') {
+                    updateOutputState(data.result);
+                    processBadge.innerHTML = `<span class="w-2 h-2 rounded-full bg-tertiary animate-pulse"></span> Selesai (Dekripsi)`;
+
+                    // Reset secretKey/password field
+                    secretKey.value = '';
+                    secretKey.dispatchEvent(new Event('input'));
+
+                    showSuccessModal(
+                        "Proses Berhasil!",
+                        "Teks Anda telah berhasil didekripsi dengan aman menggunakan AES-256.",
+                        () => {
+                            const blob = new Blob([data.result], { type: "text/plain;charset=utf-8" });
+                            const url = URL.createObjectURL(blob);
+                            const a = document.createElement('a');
+                            a.href = url;
+                            a.download = 'kriptoguard_decrypted_text.txt';
+                            document.body.appendChild(a);
+                            a.click();
+                            document.body.removeChild(a);
+                            URL.revokeObjectURL(url);
+                        },
+                        () => {
+                            navigator.clipboard.writeText(data.result);
+                            showAlertModal('Berhasil', 'Hasil dekripsi disalin ke clipboard!', 'success');
+                        }
+                    );
+                } else {
+                    showAlertModal('Gagal', data.message || 'Gagal mendekripsi teks. Pastikan password/keyfile benar.', 'error');
+                    processBadge.innerHTML = `<span class="w-2 h-2 rounded-full bg-error"></span> Gagal`;
+                }
+            } catch (err) {
+                showAlertModal('Kesalahan', 'Kesalahan koneksi ke server.', 'error');
+                processBadge.innerHTML = `<span class="w-2 h-2 rounded-full bg-error"></span> Gagal`;
+            }
+        });
+
+        // Copy Result Button
+        btnCopy.addEventListener('click', () => {
+            if (resultText.value) {
+                navigator.clipboard.writeText(resultText.value);
+                showAlertModal('Berhasil', 'Hasil proses berhasil disalin ke clipboard!', 'success');
+            }
+        });
+
+        // Save Result as TXT File
+        btnSaveTxt.addEventListener('click', () => {
+            if (!resultText.value) return;
+            const textToSave = resultText.value;
+            const blob = new Blob([textToSave], { type: "text/plain;charset=utf-8" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'kriptoguard_text_result.txt';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        });
+    </script>
+</body>
+
+</html>
